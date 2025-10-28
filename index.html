@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us | Soft Nude Theme</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #f5e8d0 0%, #e7d9c4 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #4b3f35;
+    }
+
+    .container {
+      background: #fefaf4;
+      padding: 35px 45px;
+      width: 420px;
+      border-radius: 14px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-4px);
+    }
+
+    h2 {
+      text-align: center;
+      color: #3d342c;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    label {
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+      color: #4b3f35;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 15px;
+      border: 2px solid #d6c4b0;
+      border-radius: 8px;
+      outline: none;
+      background-color: #fcf8f3;
+      color: #4b3f35;
+      transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #b89e82;
+      background-color: #fffaf4;
+      box-shadow: 0 0 5px rgba(184, 158, 130, 0.5);
+    }
+
+    .error {
+      color: #b33a3a;
+      font-size: 14px;
+      margin-top: 4px;
+      min-height: 18px;
+    }
+
+    .valid {
+      border-color: #7ba77b !important;
+    }
+
+    .invalid {
+      border-color: #b33a3a !important;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #b89e82;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #a68d73;
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* === Popup Styles === */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .popup-overlay.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .popup {
+      background: #fffaf4;
+      border-radius: 12px;
+      padding: 25px 30px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .popup h3 {
+      color: #3b7c3b;
+      margin-bottom: 10px;
+    }
+
+    .popup p {
+      color: #4b3f35;
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+
+    .close-btn {
+      background-color: #b89e82;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .close-btn:hover {
+      background-color: #a68d73;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Contact Us 🤎</h2>
+
+    <form id="contactForm" novalidate>
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="Enter your name" />
+        <small class="error" id="nameError"></small>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="Enter your email" />
+        <small class="error" id="emailError"></small>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Your Message</label>
+        <textarea id="message" rows="4" placeholder="Write your message..."></textarea>
+        <small class="error" id="messageError"></small>
+      </div>
+
+      <button type="submit">Send Message ✉️</button>
+    </form>
+  </div>
+
+  <!-- Success Popup -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <h3>✅ Message Sent Successfully!</h3>
+      <p>Thank you for reaching out. We’ll get back to you soon.</p>
+      <button class="close-btn" id="closePopup">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("contactForm");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const messageInput = document.getElementById("message");
+
+    const nameError = document.getElementById("nameError");
+    const emailError = document.getElementById("emailError");
+    const messageError = document.getElementById("messageError");
+
+    const popupOverlay = document.getElementById("popupOverlay");
+    const closePopup = document.getElementById("closePopup");
+
+    const namePattern = /^[A-Za-z\s]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    nameInput.addEventListener("input", () => validateName());
+    emailInput.addEventListener("input", () => validateEmail());
+    messageInput.addEventListener("input", () => validateMessage());
+
+    function validateName() {
+      const name = nameInput.value.trim();
+      if (name === "") {
+        showError(nameInput, nameError, "Name is required.");
+        return false;
+      } else if (!namePattern.test(name)) {
+        showError(nameInput, nameError, "Only letters and spaces allowed.");
+        return false;
+      } else {
+        showSuccess(nameInput, nameError);
+        return true;
+      }
+    }
+
+    function validateEmail() {
+      const email = emailInput.value.trim();
+      if (email === "") {
+        showError(emailInput, emailError, "Email is required.");
+        return false;
+      } else if (!emailPattern.test(email)) {
+        showError(emailInput, emailError, "Invalid email address.");
+        return false;
+      } else {
+        showSuccess(emailInput, emailError);
+        return true;
+      }
+    }
+
+    function validateMessage() {
+      const message = messageInput.value.trim();
+      if (message === "") {
+        showError(messageInput, messageError, "Message cannot be empty.");
+        return false;
+      } else {
+        showSuccess(messageInput, messageError);
+        return true;
+      }
+    }
+
+    function showError(input, errorElement, message) {
+      errorElement.textContent = message;
+      input.classList.add("invalid");
+      input.classList.remove("valid");
+    }
+
+    function showSuccess(input, errorElement) {
+      errorElement.textContent = "";
+      input.classList.add("valid");
+      input.classList.remove("invalid");
+    }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const isNameValid = validateName();
+      const isEmailValid = validateEmail();
+      const isMessageValid = validateMessage();
+
+      if (isNameValid && isEmailValid && isMessageValid) {
+        popupOverlay.classList.add("active");
+        form.reset();
+        [nameInput, emailInput, messageInput].forEach((input) =>
+          input.classList.remove("valid")
+        );
+      }
+    });
+
+    closePopup.addEventListener("click", () => {
+      popupOverlay.classList.remove("active");
+    });
+
+    // Close popup when clicking outside it
+    popupOverlay.addEventListener("click", (e) => {
+      if (e.target === popupOverlay) {
+        popupOverlay.classList.remove("active");
+      }
+    });
+  </script>
+</body>
+</html>
